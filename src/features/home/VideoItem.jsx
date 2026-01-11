@@ -3,7 +3,7 @@ import { parseDuration } from '../../utils/formatTime';
 import { getYoutubeThumbnail } from '../../utils/getYoutubeThumbnail';
 
 const VideoItem = ({ video, showTopic = false }) => {
-  const duration = parseDuration(video.duration);
+  const duration = Math.round(parseDuration(video.duration));
   const thumbnail = getYoutubeThumbnail(video.url);
   
   return (

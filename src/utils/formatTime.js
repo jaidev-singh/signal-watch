@@ -22,7 +22,16 @@ export function formatTime(timestamp) {
 }
 
 export function parseDuration(duration) {
-  // Parse duration like "18:00" to minutes
+  // Parse duration like "18:24" or "14:15" to total minutes
+  if (!duration) return 0;
+  
   const parts = duration.split(':');
-  return parseInt(parts[0]);
+  if (parts.length === 2) {
+    const minutes = parseInt(parts[0], 10) || 0;
+    const seconds = parseInt(parts[1], 10) || 0;
+    return minutes + (seconds / 60); // Return total minutes including seconds as fraction
+  }
+  
+  // Fallback: if just a number, treat as minutes
+  return parseInt(duration, 10) || 0;
 }

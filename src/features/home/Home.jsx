@@ -17,28 +17,53 @@ const Home = () => {
   const { filters, updateFilter, selectedCreators, toggleCreator } = useFilters();
 
   // Filter topics based on selected filters
-  const filteredTopics = topics.filter(topic => {
-    // Topic filter
-    if (filters.topic !== 'all' && topic.id !== filters.topic) {
-      return false;
-    }
+  const filteredTopics = topics
+    .filter(topic => {
+      // Topic filter
+      if (filters.topic !== 'all' && topic.id !== filters.topic) {
+        return false;
+      }
 
-    // Time filter (check if topic has videos under the time limit)
-    if (filters.maxDuration) {
-      const hasShortVideo = topic.videos.some(v => parseDuration(v.duration) <= filters.maxDuration);
-      if (!hasShortVideo) return false;
-    }
+      // Time filter (check if topic has videos under the time limit)
+      if (filters.maxDuration) {
+        const hasShortVideo = topic.videos.some(v => {
+          const videoMinutes = Math.round(parseDuration(v.duration));
+          return videoMinutes <= filters.maxDuration;
+        });
+        if (!hasShortVideo) return false;
+      }
 
-    // Today filter
-    if (filters.today) {
-      const updatedDate = new Date(topic.updatedAt);
-      const today = new Date();
-      const isToday = updatedDate.toDateString() === today.toDateString();
-      if (!isToday) return false;
-    }
+      // Today filter - last 24 hours
+      if (filters.today) {
+        const timestamp = topic.last_update || topic.updatedAt || topic.created_at;
+        if (!timestamp) return false;
+        
+        const updatedDate = new Date(timestamp);
+        const now = new Date();
+        const hoursDiff = (now - updatedDate) / (1000 * 60 * 60); // milliseconds to hours
+        
+        if (hoursDiff > 24) return false;
+      }
 
-    return true;
-  }).sort((a, b) => {
+      return true;
+    })
+    .map(topic => {
+      // Filter videos within each topic based on duration filter
+      let filteredVideos = topic.videos;
+      
+      if (filters.maxDuration) {
+        filteredVideos = topic.videos.filter(v => {
+          const videoMinutes = Math.round(parseDuration(v.duration));
+          return videoMinutes <= filters.maxDuration;
+        });
+      }
+      
+      return {
+        ...topic,
+        videos: filteredVideos
+      };
+    })
+    .sort((a, b) => {
     // Sort by priority ascending (1 = highest priority shows first)
     // Topics with priority 0 or undefined go to the end
     const aPriority = a.priority || 999999;
