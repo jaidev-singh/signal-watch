@@ -67,18 +67,21 @@ const Home = () => {
   console.log('Selected creators:', selectedCreators);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#F7F8FA' }}>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center mb-4">
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-[1100px] mx-auto px-6 py-5">
+          <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">SignalWatch</h1>
-              <p className="text-sm text-gray-600">Decide what to watch</p>
+              <h1 className="text-3xl font-bold" style={{ color: '#1E3A8A' }}>SignalWatch</h1>
+              <p className="text-sm text-gray-500 mt-1">Decide what to watch</p>
             </div>
             <a
               href="/admin"
-              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors text-sm"
+              className="px-5 py-2.5 text-sm font-medium text-white rounded-lg transition-colors"
+              style={{ backgroundColor: '#1E3A8A' }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = '#1e40af'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = '#1E3A8A'}
             >
               Admin Panel
             </a>
@@ -96,7 +99,7 @@ const Home = () => {
       />
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 py-6">
+      <main className="max-w-[1100px] mx-auto px-6 py-8">
         {view === 'topics' ? (
           // Topics View
           <div>
@@ -144,8 +147,8 @@ const Home = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-white mt-12 py-6">
-        <div className="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
+      <footer className="border-t border-gray-200 bg-white mt-16 py-8">
+        <div className="max-w-[1100px] mx-auto px-6 text-center text-sm text-gray-500">
           This app curates public analysis and links to original YouTube videos.
         </div>
       </footer>

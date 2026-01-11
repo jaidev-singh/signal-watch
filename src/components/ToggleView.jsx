@@ -2,24 +2,24 @@ import React from 'react';
 
 const ToggleView = ({ view, onChange }) => {
   return (
-    <div className="flex gap-4">
+    <div className="inline-flex rounded-lg p-1" style={{ backgroundColor: '#F3F4F6' }}>
       <button
         onClick={() => onChange('topics')}
-        className={`px-6 py-2 rounded-md font-medium transition-colors ${
-          view === 'topics'
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+        className="px-6 py-2.5 rounded-lg font-medium transition-all text-sm"
+        style={{
+          backgroundColor: view === 'topics' ? '#1E3A8A' : 'transparent',
+          color: view === 'topics' ? 'white' : '#6B7280'
+        }}
       >
-        Topics
+        News
       </button>
       <button
         onClick={() => onChange('creators')}
-        className={`px-6 py-2 rounded-md font-medium transition-colors ${
-          view === 'creators'
-            ? 'bg-blue-600 text-white'
-            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-        }`}
+        className="px-6 py-2.5 rounded-lg font-medium transition-all text-sm"
+        style={{
+          backgroundColor: view === 'creators' ? '#1E3A8A' : 'transparent',
+          color: view === 'creators' ? 'white' : '#6B7280'
+        }}
       >
         Creators
       </button>
