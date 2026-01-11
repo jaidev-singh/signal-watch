@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Supabase Connection Test</title>
+</head>
+<body>
+  <h1>Supabase Connection Test</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const supabaseUrl = 'https://cklwryltujhvvfdbkkrn.supabase.co';
+    const supabaseKey = 'sb_publishable_rT3cPC5DjrexI4lFRTqUdA_dlSNA9fB';
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const results = document.getElementById('results');
+
+    async function testConnection() {
+      results.innerHTML = '<p>Testing connection...</p>';
+      
+      // Test 1: Check tables
+      const { data: creators, error: creatorsError } = await supabase
+        .from('creators')
+        .select('*')
+        .limit(5);
+      
+      results.innerHTML += `<h2>Test 1: Creators Table</h2>`;
+      if (creatorsError) {
+        results.innerHTML += `<p style="color: red;">❌ Error: ${creatorsError.message}</p>`;
+      } else {
+        results.innerHTML += `<p style="color: green;">✅ Success! Found ${creators.length} creators</p>`;
+        results.innerHTML += `<pre>${JSON.stringify(creators, null, 2)}</pre>`;
+      }
+
+      // Test 2: Check topics
+      const { data: topics, error: topicsError } = await supabase
+        .from('topics')
+        .select('*')
+        .limit(5);
+      
+      results.innerHTML += `<h2>Test 2: Topics Table</h2>`;
+      if (topicsError) {
+        results.innerHTML += `<p style="color: red;">❌ Error: ${topicsError.message}</p>`;
+      } else {
+        results.innerHTML += `<p style="color: green;">✅ Success! Found ${topics.length} topics</p>`;
+        results.innerHTML += `<pre>${JSON.stringify(topics, null, 2)}</pre>`;
+      }
+
+      // Test 3: Try to add a creator (will fail if not authenticated, which is expected)
+      const { data: newCreator, error: insertError } = await supabase
+        .from('creators')
+        .insert([{ name: 'Test Creator ' + Date.now() }])
+        .select();
+      
+      results.innerHTML += `<h2>Test 3: Insert Creator (as anonymous user)</h2>`;
+      if (insertError) {
+        results.innerHTML += `<p style="color: orange;">⚠️ Expected error (need to be authenticated): ${insertError.message}</p>`;
+      } else {
+        results.innerHTML += `<p style="color: red;">❌ Unexpected: Anonymous user can insert! Check your RLS policies.</p>`;
+      }
+    }
+
+    testConnection();
+  </script>
+</body>
+</html>

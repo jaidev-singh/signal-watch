@@ -1,0 +1,16 @@
+# Netlify Deployment Configuration
+
+# Build settings
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Redirect rules for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables (set these in Netlify UI)
+# VITE_SUPABASE_URL
+# VITE_SUPABASE_ANON_KEY

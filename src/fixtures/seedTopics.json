@@ -1,0 +1,74 @@
+[
+  {
+    "id": "maldives-military",
+    "title": "Maldives – Indian Military Presence",
+    "whyMatters": "Strategic shift in Indian Ocean could reshape regional security dynamics and India's defense posture.",
+    "priority": 1,
+    "updatedAt": "2025-12-31T08:00:00Z",
+    "videos": [
+      {
+        "id": "v1",
+        "channel": "Career247",
+        "title": "China Factor Behind Maldives Move",
+        "duration": "18:00",
+        "stance": "Balanced",
+        "covers": ["Maldives", "China"],
+        "url": "https://youtube.com/watch?v=dQw4w9WgXcQ"
+      },
+      {
+        "id": "v2",
+        "channel": "Shekhar Gupta",
+        "title": "Why India Is Playing It Cool",
+        "duration": "22:00",
+        "stance": "Balanced",
+        "covers": ["Diplomacy", "Strategy"],
+        "url": "https://youtube.com/watch?v=jNQXAC9IVRw"
+      },
+      {
+        "id": "v3",
+        "channel": "Major Gaurav Arya",
+        "title": "India Should Reconsider Support",
+        "duration": "25:00",
+        "stance": "Hawkish",
+        "covers": ["Military", "Policy"],
+        "url": "https://youtube.com/watch?v=9bZkp7q19f0"
+      },
+      {
+        "id": "v4",
+        "channel": "WION",
+        "title": "China's Expanding Influence in Indian Ocean",
+        "duration": "10:00",
+        "stance": "International",
+        "covers": ["China", "Indian Ocean"],
+        "url": "https://youtube.com/watch?v=kJQP7kiw5Fk"
+      }
+    ]
+  },
+  {
+    "id": "india-china-lac",
+    "title": "India–China Border (LAC)",
+    "whyMatters": "Ongoing tensions affect bilateral trade, military deployments, and could trigger wider regional instability.",
+    "priority": 2,
+    "updatedAt": "2025-12-31T06:00:00Z",
+    "videos": [
+      {
+        "id": "v5",
+        "channel": "Career247",
+        "title": "Latest LAC Developments Explained",
+        "duration": "14:00",
+        "stance": "Balanced",
+        "covers": ["LAC", "Diplomacy"],
+        "url": "https://youtube.com/watch?v=L_jWHffIx5E"
+      },
+      {
+        "id": "v6",
+        "channel": "Major Gaurav Arya",
+        "title": "India Must Respond Firmly",
+        "duration": "20:00",
+        "stance": "Hawkish",
+        "covers": ["LAC", "Military"],
+        "url": "https://youtube.com/watch?v=yPYZpwSpKmA"
+      }
+    ]
+  }
+]

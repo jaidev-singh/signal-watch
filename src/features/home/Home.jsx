@@ -1,0 +1,156 @@
+import React, { useState } from 'react';
+import { useTopics } from '../../hooks/useTopics';
+import { useCreators } from '../../hooks/useCreators';
+import TopicCard from './TopicCard';
+import VideoItem from './VideoItem';
+import FilterBar from '../../components/FilterBar';
+import ToggleView from '../../components/ToggleView';
+import CreatorFilter from '../../components/CreatorFilter';
+import { useFilters } from './useFilters';
+import { groupByCreator } from '../../utils/groupByCreator';
+import { parseDuration } from '../../utils/formatTime';
+
+const Home = () => {
+  const [view, setView] = useState('topics'); // 'topics' or 'creators'
+  const { topics } = useTopics();
+  const { creators } = useCreators();
+  const { filters, updateFilter, selectedCreators, toggleCreator } = useFilters();
+
+  // Filter topics based on selected filters
+  const filteredTopics = topics.filter(topic => {
+    // Topic filter
+    if (filters.topic !== 'all' && topic.id !== filters.topic) {
+      return false;
+    }
+
+    // Time filter (check if topic has videos under the time limit)
+    if (filters.maxDuration) {
+      const hasShortVideo = topic.videos.some(v => parseDuration(v.duration) <= filters.maxDuration);
+      if (!hasShortVideo) return false;
+    }
+
+    // Today filter
+    if (filters.today) {
+      const updatedDate = new Date(topic.updatedAt);
+      const today = new Date();
+      const isToday = updatedDate.toDateString() === today.toDateString();
+      if (!isToday) return false;
+    }
+
+    return true;
+  }).sort((a, b) => {
+    // Sort by priority ascending (1 = highest priority shows first)
+    // Topics with priority 0 or undefined go to the end
+    const aPriority = a.priority || 999999;
+    const bPriority = b.priority || 999999;
+    
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+    
+    // If same priority, sort by updated date (newest first)
+    return new Date(b.updatedAt) - new Date(a.updatedAt);
+  });
+
+  // For creators view, group by creator and filter
+  const creatorGroups = groupByCreator(filteredTopics);
+  const filteredCreators = selectedCreators.length > 0
+    ? Object.fromEntries(
+        Object.entries(creatorGroups).filter(([creator]) => selectedCreators.includes(creator))
+      )
+    : creatorGroups;
+
+  // Use all creators from creatorsService, not just those with videos
+  const allCreators = creators;
+
+  console.log('Creators for dropdown:', allCreators);
+  console.log('Selected creators:', selectedCreators);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">SignalWatch</h1>
+              <p className="text-sm text-gray-600">Decide what to watch</p>
+            </div>
+            <a
+              href="/admin"
+              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors text-sm"
+            >
+              Admin Panel
+            </a>
+          </div>
+          
+          <ToggleView view={view} onChange={setView} />
+        </div>
+      </header>
+
+      {/* Filter Bar */}
+      <FilterBar 
+        filters={filters} 
+        updateFilter={updateFilter} 
+        topics={topics}
+      />
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-4 py-6">
+        {view === 'topics' ? (
+          // Topics View
+          <div>
+            {filteredTopics.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <p className="text-lg">No topics match your filters</p>
+              </div>
+            ) : (
+              filteredTopics.map(topic => (
+                <TopicCard key={topic.id} topic={topic} />
+              ))
+            )}
+          </div>
+        ) : (
+          // Creators View
+          <div>
+            <CreatorFilter
+              creators={allCreators}
+              selectedCreators={selectedCreators}
+              onToggle={toggleCreator}
+            />
+            
+            {Object.keys(filteredCreators).length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <p className="text-lg">No creators match your selection</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {Object.entries(filteredCreators).map(([creator, videos]) => (
+                  <div key={creator} className="bg-white rounded-lg shadow-md p-6">
+                    <h2 className="text-xl font-bold text-gray-900 mb-4">
+                      🎥 {creator}
+                    </h2>
+                    <div className="space-y-4">
+                      {videos.map(video => (
+                        <VideoItem key={video.id} video={video} showTopic={true} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t bg-white mt-12 py-6">
+        <div className="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
+          This app curates public analysis and links to original YouTube videos.
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Home;
